@@ -1,14 +1,16 @@
 #lang racket
-(define UofL (make-weak-hash))
+(define varhash (make-weak-hash))
 
-(define (input)
-  (define h1 (read))
+(define (input var)
+  (define h1 var)
   (define h2 (read))
-  (hash-set! UofL h1 h2))
+  (hash-set! varhash h1 h2)
+  void)
 
-(define (output)
-  (define h3 (read))
-  (hash-ref UofL h3))
+(define (output var)
+  (define h3 var)
+  (hash-ref varhash h3))
 
-
-    
+(provide input)
+(provide output)
+(provide varhash)
