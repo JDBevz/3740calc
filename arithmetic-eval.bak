@@ -1,4 +1,4 @@
-#lang racket
+;#lang racket
 
 (define (uoflmath)
    (display "UofL>")                 ; print a prompt
@@ -7,11 +7,11 @@
              (display "exiting")
              (newline))
             (else
-             (write (arithmetic-eval expr))
+             (write (math-eval expr))
              (newline)
              (uoflmath)))))
 
-(define (arithmetic-eval expr) 
+(define (math-eval expr) 
   (cond 
         ((number? expr);if the expression is just a number
          expr);return the number
@@ -20,14 +20,12 @@
          (single-op-eval expr))
 
         ))
-(provide arithmetic-eval)
-
 
 (define (single-op-eval expr) ;evaluates expression of type <val> <op> <val>
 
   (let ((op (cadr expr));second element of the 'list' that is the expression
-        (val1 (arithmetic-eval (car expr)))
-        (val2 (arithmetic-eval (caddr expr))))
+        (val1 (math-eval (car expr)))
+        (val2 (math-eval (caddr expr))))
 
     (cond ((eq? op '+)
             (+ val1 val2))
@@ -42,3 +40,4 @@
            (else
             (error "Invalid operation in expr:" expr)))))
 
+(provide math-eval)

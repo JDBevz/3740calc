@@ -1,7 +1,12 @@
 #lang racket
 
-(define ar-ops '(^ / * -));list of valid arithmetic operators
+(require racket/include)
+(require "arithmetic-eval.rkt")
+
+
+(define ar-ops '(^ + / * -));list of valid arithmetic operators
 (define rel-ops '(== <> <= >= < >));list of valid relational operators
+(define eq-op '(=))
 (define ops (append (append ar-ops rel-ops) '(=))) ;a list of all valid operators, including assignment
 
 (define (uofl)
@@ -12,26 +17,9 @@
              (newline))
             (else
              (eval expr)
+              (newline)
              (uofl)))))
 
-
-
-            ;if it is a number or boolean, print it (self evaluating, nothing needs to be done with it)
-           ;((self-eval? expr)
-           ;  (begin
-          ;     (display expr)
-         ;    (newline)
-        ;     (UofL)))
-            ;expr is an arithmetic statement
-            
-            
-       ;     (else (begin                      ; otherwise,
-      ;       (write (evaluator expr))
-     ;        (newline)
-    ;         )
-   ;          (UofL)))
-  ;   )
- ; ) ;  and loop to do it again
 
 ;main evaluator
 ;decides what the expression is and sends it to the right place
@@ -59,22 +47,41 @@
 (define (eval-list expr)
 
   (cond
-    ;if the expression is a special form
-    
+    ;if the expression is a math (numbers only type
+    ((number?(car expr))
+     (num-eval expr))
+
+    ((eq? (car expr) 'definevari)
+    (special expr))
+
+  ((eq? (car expr) 'for)
+  (iterative expr))
+
+  ((eq? (car expr) 'if)
+   (selection expr))
+
+(else(display "ERROR")
+       (newline))
+
+    ))
+
+(define (num-eval expr)
+  (cond
     ;if the expression is of relational form
     ((member (cadr expr) rel-ops)
      (relational expr))
 
     ;if the expression is of assignment form
-    ((eq? '=' (cadr expr))
+    ((member (cadr expr) eq-op)
      (assignment expr))
 
     ;else it is arithmetic
     ((member (cadr expr) ar-ops)
-     (arithmetic expr))
+     (write (arithmetic-eval expr)))
+
+      (else(display "ERROR")
+       (newline))
     ))
-
-
 
 (define (arithmetic expr)
   (display "arithmetic"))
@@ -90,3 +97,6 @@
 
 (define (relational expr)
   (display "relational"))
+
+(define (special expr)
+  (display "special"))
